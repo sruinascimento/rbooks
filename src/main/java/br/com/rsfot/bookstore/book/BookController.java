@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class BookController {
     private final BookRepository bookRepository;
@@ -31,6 +33,15 @@ public class BookController {
 
         return ResponseEntity.ok(new NewBookResponse(book));
 
+    }
+
+    @GetMapping("/books")
+    public ResponseEntity<List<BookListResponse>> listBooks() {
+        var books = bookRepository.findAll()
+                .stream()
+                .map(BookListResponse::new)
+                .toList();
+        return ResponseEntity.ok(books);
     }
 
 }
