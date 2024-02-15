@@ -7,7 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
+import java.util.*;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -20,17 +20,13 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<FieldErrorResponse> handleNotFoundException(NotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new FieldErrorResponse(exception));
+    public ResponseEntity<Map<String, String>> handleNotFoundException(NotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", exception.getMessage()));
     }
 
     private record FieldErrorResponse(String field, String message) {
         public FieldErrorResponse(FieldError fieldError) {
             this(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-
-        public FieldErrorResponse(Exception exception) {
-            this("message", exception.getMessage());
         }
     }
 }
