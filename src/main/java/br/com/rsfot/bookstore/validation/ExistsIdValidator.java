@@ -27,6 +27,6 @@ public class ExistsIdValidator implements ConstraintValidator<ExistsId, Long> {
         Query query = em.createQuery("select 1 from " + klass.getName() + " where " + domainAttribute + "=:value");
         query.setParameter("value", value);
 
-        return query.getResultList().isEmpty();
+        return !query.getResultList().isEmpty();
     }
 }

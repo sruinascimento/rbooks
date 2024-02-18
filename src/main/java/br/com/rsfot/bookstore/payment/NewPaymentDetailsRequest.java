@@ -3,6 +3,7 @@ package br.com.rsfot.bookstore.payment;
 import br.com.rsfot.bookstore.country.Country;
 import br.com.rsfot.bookstore.state.State;
 import br.com.rsfot.bookstore.validation.ExistsId;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CNPJValidator;
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
@@ -31,7 +32,10 @@ public record NewPaymentDetailsRequest(
         @Pattern(regexp = "\\d{5}-\\d{3}", message = "CEP must be in the format XXXXX-XXX")
         String cep,
         @NotBlank
-        String phone) {
+        String phone,
+        @NotNull
+        @Valid
+        NewBookPurchaseRequest products) {
 
     public boolean isValidDocument() {
         Assert.hasLength(document, "Document cannot be empty");
