@@ -1,6 +1,6 @@
 package br.com.rsfot.bookstore.validation;
 
-import br.com.rsfot.bookstore.payment.NewPaymentDetailsRequest;
+import br.com.rsfot.bookstore.payment.NewPurchaseRequest;
 import br.com.rsfot.bookstore.state.StateRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -16,7 +16,7 @@ public class StateFromCountryValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return NewPaymentDetailsRequest.class.isAssignableFrom(clazz);
+        return NewPurchaseRequest.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class StateFromCountryValidator implements Validator {
         if (errors.hasErrors()) {
             return;
         }
-        NewPaymentDetailsRequest paymentDetails = (NewPaymentDetailsRequest) target;
+        NewPurchaseRequest paymentDetails = (NewPurchaseRequest) target;
         boolean stateDoesntBelongToTheCountry = !stateRepository.existsByIdAndCountry_Id(paymentDetails.stateId(), paymentDetails.countryId());
         if (stateDoesntBelongToTheCountry) {
             errors.rejectValue("stateId", null, "This state does not belong to the selected country");

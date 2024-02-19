@@ -1,17 +1,20 @@
-package br.com.rsfot.bookstore.payment;
+package br.com.rsfot.bookstore.validation;
 
+import br.com.rsfot.bookstore.payment.NewPurchaseRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Component
 public class VerifyDocumentCpfOrCnpjValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
-        return NewPaymentDetailsRequest.class.isAssignableFrom(clazz);
+        return NewPurchaseRequest.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        NewPaymentDetailsRequest request = (NewPaymentDetailsRequest) target;
+        NewPurchaseRequest request = (NewPurchaseRequest) target;
         if (!request.isValidDocument()) {
             errors.rejectValue("document", null, "Invalid document format. It should be a valid CPF or CNPJ.");
         }

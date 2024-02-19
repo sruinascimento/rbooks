@@ -9,7 +9,9 @@ import org.hibernate.validator.internal.constraintvalidators.hv.br.CNPJValidator
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.springframework.util.Assert;
 
-public record NewPaymentDetailsRequest(
+import java.math.BigDecimal;
+
+public record NewPurchaseRequest(
         @NotBlank
         @Email
         String email,
@@ -35,7 +37,7 @@ public record NewPaymentDetailsRequest(
         String phone,
         @NotNull
         @Valid
-        NewBookPurchaseRequest products) {
+        NewProductsPurchaseRequest products) {
 
     public boolean isValidDocument() {
         Assert.hasLength(document, "Document cannot be empty");
@@ -49,5 +51,7 @@ public record NewPaymentDetailsRequest(
         return cpfValidator.isValid(document, null) || cnpjValidator.isValid(document, null);
     }
 
-
+    public BigDecimal getAmount() {
+        return products.amount();
+    }
 }
