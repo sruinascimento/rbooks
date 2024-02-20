@@ -2,7 +2,7 @@ package br.com.rsfot.bookstore.validation;
 
 import br.com.rsfot.bookstore.book.Book;
 import br.com.rsfot.bookstore.book.BookRepository;
-import br.com.rsfot.bookstore.payment.NewPurchaseRequest;
+import br.com.rsfot.bookstore.purchase.NewPurchaseRequest;
 import br.com.rsfot.bookstore.state.StateRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

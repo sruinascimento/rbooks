@@ -1,6 +1,6 @@
 package br.com.rsfot.bookstore.validation;
 
-import br.com.rsfot.bookstore.payment.NewPurchaseRequest;
+import br.com.rsfot.bookstore.purchase.NewPurchaseRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

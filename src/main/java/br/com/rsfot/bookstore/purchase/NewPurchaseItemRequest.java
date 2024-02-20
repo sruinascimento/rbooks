@@ -1,4 +1,4 @@
-package br.com.rsfot.bookstore.payment;
+package br.com.rsfot.bookstore.purchase;
 
 import br.com.rsfot.bookstore.book.Book;
 import br.com.rsfot.bookstore.validation.ExistsId;
@@ -12,4 +12,8 @@ public record NewPurchaseItemRequest(
         @NotNull
         @Min(1)
         int quantity) {
+
+    public PurchaseItem toModel(Book book) {
+        return new PurchaseItem(book, quantity, book.getPrice());
+    }
 }

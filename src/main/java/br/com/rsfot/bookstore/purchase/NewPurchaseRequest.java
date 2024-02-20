@@ -1,5 +1,6 @@
-package br.com.rsfot.bookstore.payment;
+package br.com.rsfot.bookstore.purchase;
 
+import br.com.rsfot.bookstore.book.Book;
 import br.com.rsfot.bookstore.country.Country;
 import br.com.rsfot.bookstore.state.State;
 import br.com.rsfot.bookstore.validation.ExistsId;
@@ -10,6 +11,7 @@ import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record NewPurchaseRequest(
         @NotBlank
@@ -53,5 +55,22 @@ public record NewPurchaseRequest(
 
     public BigDecimal getAmount() {
         return products.amount();
+    }
+
+    public Purchase toModel(State state, Country country, List<Book> books) {
+        return new Purchase(
+                name,
+                email,
+                document,
+                phone,
+                address,
+                complement,
+                city,
+                state,
+                country,
+                cep,
+                products.toModel(books),
+                products.amount()
+        );
     }
 }
