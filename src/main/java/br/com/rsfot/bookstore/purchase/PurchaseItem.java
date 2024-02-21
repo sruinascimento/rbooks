@@ -4,7 +4,6 @@ import br.com.rsfot.bookstore.book.Book;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -22,9 +21,6 @@ public class PurchaseItem {
     @ManyToOne
     @JoinColumn(name = "purchase_id")
     private Purchase purchase;
-    @Column(nullable = false, updatable = false, name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
-
     @Deprecated
     public PurchaseItem() {
     }
@@ -35,7 +31,12 @@ public class PurchaseItem {
         this.price = price;
     }
 
-
+    public PurchaseItem(Book book, int quantity, BigDecimal price, Purchase purchase) {
+        this.book = book;
+        this.quantity = quantity;
+        this.price = price;
+        this.purchase = purchase;
+    }
 
     public Long getId() {
         return id;
@@ -51,5 +52,9 @@ public class PurchaseItem {
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public void setPurchase(Purchase purchase) {
+        this.purchase = purchase;
     }
 }

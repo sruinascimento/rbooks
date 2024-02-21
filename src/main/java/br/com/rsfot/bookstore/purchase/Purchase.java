@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -30,6 +31,8 @@ public class Purchase {
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.PERSIST)
     private Set<PurchaseItem> products = new HashSet<>();
     private BigDecimal amount;
+    @Column(nullable = false, updatable = false, name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Deprecated
     public Purchase() {
@@ -55,6 +58,7 @@ public class Purchase {
         this.phone = phone;
         this.address = new Address(address, complement, city, state, country, cep);
         this.products = products;
+        this.products.forEach(it -> it.setPurchase(this));
         this.amount = amount;
     }
 
@@ -86,7 +90,16 @@ public class Purchase {
         return Collections.unmodifiableCollection(products);
     }
 
+    public void addItem(PurchaseItem item) {
+        this.products.add(item);
+    }
+
     public BigDecimal getAmount() {
         return amount;
+    }
+
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
