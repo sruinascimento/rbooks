@@ -28,7 +28,7 @@ public class PurchaseService {
         this.purchaseRepository = purchaseRepository;
     }
 
-    public NewPurchaseResponse create(NewPurchaseRequest newPurchaseRequest) {
+    public Long create(NewPurchaseRequest newPurchaseRequest) {
         State state = stateRepository.findById(newPurchaseRequest.stateId())
                 .orElseThrow(() -> new NotFoundException("State not found with id " + newPurchaseRequest.stateId()));
 
@@ -40,7 +40,13 @@ public class PurchaseService {
         Purchase purchase = newPurchaseRequest.toModel(state, country, books);
         purchaseRepository.save(purchase);
 
-        return new NewPurchaseResponse(purchase);
+        return purchase.getId();
 
+    }
+
+    public PurchaseResponse getPurchase(Long id) {
+        Purchase purchase = purchaseRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Purchase not found with id " + id));
+        return new PurchaseResponse(purchase);
     }
 }

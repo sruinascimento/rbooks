@@ -8,7 +8,7 @@ import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 
-public record NewPurchaseResponse(
+public record PurchaseResponse(
         Long id,
         String name,
         String email,
@@ -25,7 +25,7 @@ public record NewPurchaseResponse(
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", shape = STRING)
         LocalDateTime createdAt
 ) {
-    public NewPurchaseResponse(Purchase purchase) {
+    public PurchaseResponse(Purchase purchase) {
         this(purchase.getId(),
                 purchase.getName(),
                 purchase.getEmail(),

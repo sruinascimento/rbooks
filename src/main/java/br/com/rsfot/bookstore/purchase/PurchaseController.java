@@ -7,6 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 public class PurchaseController {
@@ -24,10 +27,18 @@ public class PurchaseController {
                 purchaseValidator);
     }
 
-    @PostMapping("/purchase")
+    @PostMapping("/purchases")
     @Transactional
-    public ResponseEntity<NewPurchaseResponse> create(@Valid @RequestBody NewPurchaseRequest newPurchaseRequest) {
-        NewPurchaseResponse purchaseResponse = purchaseService.create(newPurchaseRequest);
+    public ResponseEntity<Void> create(@Valid @RequestBody NewPurchaseRequest newPurchaseRequest,
+                                                   UriComponentsBuilder uriComponentsBuilder) {
+        Long purchaseIdCreated = purchaseService.create(newPurchaseRequest);
+        URI uri = uriComponentsBuilder.path("/purchases/{id}").buildAndExpand(purchaseIdCreated).toUri();
+        return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping("/purchases/{id}")
+    public ResponseEntity<PurchaseResponse> getPurchase(@PathVariable Long id) {
+        PurchaseResponse purchaseResponse = purchaseService.getPurchase(id);
         return ResponseEntity.ok(purchaseResponse);
     }
 }
