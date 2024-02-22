@@ -52,6 +52,7 @@ public class Purchase {
                     Set<PurchaseItem> products,
                     BigDecimal amount) {
         Assert.isTrue(!products.isEmpty(), "A purchase must have at least one product");
+        Assert.isTrue(!isCorrectAmount(), "The amount must be correct");
         this.name = name;
         this.email = email;
         this.document = document;
@@ -98,8 +99,14 @@ public class Purchase {
         return amount;
     }
 
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    private boolean isCorrectAmount() {
+        return products.stream()
+                .map(PurchaseItem::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .equals(amount);
     }
 }

@@ -4,6 +4,7 @@ import br.com.rsfot.bookstore.book.Book;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -30,14 +31,6 @@ public class PurchaseItem {
         this.quantity = quantity;
         this.price = price;
     }
-
-    public PurchaseItem(Book book, int quantity, BigDecimal price, Purchase purchase) {
-        this.book = book;
-        this.quantity = quantity;
-        this.price = price;
-        this.purchase = purchase;
-    }
-
     public Long getId() {
         return id;
     }
@@ -56,5 +49,17 @@ public class PurchaseItem {
 
     public void setPurchase(Purchase purchase) {
         this.purchase = purchase;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PurchaseItem that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(book, that.book);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, book);
     }
 }
