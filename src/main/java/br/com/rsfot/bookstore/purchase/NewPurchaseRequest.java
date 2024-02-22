@@ -2,6 +2,7 @@ package br.com.rsfot.bookstore.purchase;
 
 import br.com.rsfot.bookstore.book.Book;
 import br.com.rsfot.bookstore.country.Country;
+import br.com.rsfot.bookstore.coupon.Coupon;
 import br.com.rsfot.bookstore.state.State;
 import br.com.rsfot.bookstore.validation.ExistsId;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public record NewPurchaseRequest(
         @NotBlank
@@ -39,7 +41,8 @@ public record NewPurchaseRequest(
         String phone,
         @NotNull
         @Valid
-        NewProductsPurchaseRequest products) {
+        NewProductsPurchaseRequest products,
+        String couponCode) {
 
     public boolean isValidDocument() {
         Assert.hasLength(document, "Document cannot be empty");
@@ -57,7 +60,7 @@ public record NewPurchaseRequest(
         return products.amount();
     }
 
-    public Purchase toModel(State state, Country country, List<Book> books) {
+    public Purchase toModel(State state, Country country, List<Book> books, Coupon coupon) {
         return new Purchase(
                 name,
                 email,
@@ -70,7 +73,8 @@ public record NewPurchaseRequest(
                 country,
                 cep,
                 products.toModel(books),
-                products.amount()
+                products.amount(),
+                coupon
         );
     }
 }

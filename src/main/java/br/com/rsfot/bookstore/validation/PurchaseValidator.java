@@ -2,6 +2,8 @@ package br.com.rsfot.bookstore.validation;
 
 import br.com.rsfot.bookstore.book.Book;
 import br.com.rsfot.bookstore.book.BookRepository;
+import br.com.rsfot.bookstore.coupon.Coupon;
+import br.com.rsfot.bookstore.coupon.CouponRepository;
 import br.com.rsfot.bookstore.purchase.NewPurchaseRequest;
 import br.com.rsfot.bookstore.state.StateRepository;
 import org.springframework.stereotype.Component;
@@ -10,15 +12,18 @@ import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class PurchaseValidator implements Validator {
     private final StateRepository stateRepository;
     private final BookRepository bookRepository;
+    private final CouponRepository couponRepository;
 
-    public PurchaseValidator(StateRepository stateRepository, BookRepository bookRepository) {
+    public PurchaseValidator(StateRepository stateRepository, BookRepository bookRepository, CouponRepository couponRepository) {
         this.stateRepository = stateRepository;
         this.bookRepository = bookRepository;
+        this.couponRepository = couponRepository;
     }
 
     @Override
@@ -46,6 +51,10 @@ public class PurchaseValidator implements Validator {
         if (hasProductDuplicatedInPurchase(paymentDetails)) {
             errors.rejectValue("products", null, "There are duplicated products in the purchase");
         }
+
+        if (!isValidCoupon(paymentDetails.couponCode())) {
+            errors.rejectValue("couponCode", null, "This coupon is not valid");
+        }
     }
 
     private BigDecimal getPurchaseAmount(NewPurchaseRequest paymentDetails) {
@@ -62,5 +71,13 @@ public class PurchaseValidator implements Validator {
 
     private boolean hasProductDuplicatedInPurchase(NewPurchaseRequest paymentDetails) {
         return paymentDetails.products().getBookIds().stream().distinct().count() != paymentDetails.products().getBookIds().size();
+    }
+
+    private boolean isValidCoupon(String couponCode) {
+        if (Objects.isNull(couponCode)) {
+            return true;
+        }
+        Coupon coupon = couponRepository.findByCode(couponCode);
+        return Objects.nonNull(coupon) && coupon.isValid();
     }
 }

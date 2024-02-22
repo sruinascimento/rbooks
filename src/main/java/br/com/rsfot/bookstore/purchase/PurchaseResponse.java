@@ -22,9 +22,10 @@ public record PurchaseResponse(
         String cep,
         List<PurchaseItemResponse> products,
         BigDecimal amount,
+        String couponCode,
+        BigDecimal priceWithDiscount,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", shape = STRING)
-        LocalDateTime createdAt
-) {
+        LocalDateTime createdAt) {
     public PurchaseResponse(Purchase purchase) {
         this(purchase.getId(),
                 purchase.getName(),
@@ -39,6 +40,8 @@ public record PurchaseResponse(
                 purchase.getAddress().getCep(),
                 purchase.getProducts().stream().map(PurchaseItemResponse::new).toList(),
                 purchase.getAmount(),
+                purchase.getCouponCode(),
+                purchase.getPriceWithDiscount(),
                 purchase.getCreatedAt());
     }
 }

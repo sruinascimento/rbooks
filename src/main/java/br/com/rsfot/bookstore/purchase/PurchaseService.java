@@ -4,12 +4,14 @@ import br.com.rsfot.bookstore.book.Book;
 import br.com.rsfot.bookstore.book.BookRepository;
 import br.com.rsfot.bookstore.country.Country;
 import br.com.rsfot.bookstore.country.CountryRepository;
+import br.com.rsfot.bookstore.coupon.Coupon;
+import br.com.rsfot.bookstore.coupon.CouponRepository;
 import br.com.rsfot.bookstore.error.handler.NotFoundException;
 import br.com.rsfot.bookstore.state.State;
 import br.com.rsfot.bookstore.state.StateRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PurchaseService {
@@ -17,15 +19,18 @@ public class PurchaseService {
     private final CountryRepository countryRepository;
     private final BookRepository bookRepository;
     private final PurchaseRepository purchaseRepository;
+    private final CouponRepository couponRepository;
 
     public PurchaseService(StateRepository stateRepository,
                            CountryRepository countryRepository,
                            BookRepository bookRepository,
-                           PurchaseRepository purchaseRepository) {
+                           PurchaseRepository purchaseRepository,
+                           CouponRepository couponRepository) {
         this.stateRepository = stateRepository;
         this.countryRepository = countryRepository;
         this.bookRepository = bookRepository;
         this.purchaseRepository = purchaseRepository;
+        this.couponRepository = couponRepository;
     }
 
     public Long create(NewPurchaseRequest newPurchaseRequest) {
@@ -37,7 +42,11 @@ public class PurchaseService {
 
         List<Book> books = bookRepository.getBooksByIds(newPurchaseRequest.products().getBookIds());
 
-        Purchase purchase = newPurchaseRequest.toModel(state, country, books);
+
+        Coupon coupon = couponRepository.findByCode(newPurchaseRequest.couponCode());
+
+
+        Purchase purchase = newPurchaseRequest.toModel(state, country, books, coupon);
         purchaseRepository.save(purchase);
 
         return purchase.getId();
